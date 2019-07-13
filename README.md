@@ -7,8 +7,8 @@ Built using asp.net core api 2.2 on Microsoft Visual Studio 2019.
 
 The documentation is based on swagger, you'll see 3 web methods available:
 
-/v1/Diff/{id}/left
-/v1/Diff/{id}/right
+/v1/Diff/{id}/left<br />
+/v1/Diff/{id}/right<br />
 /v1/Diff/{id}
 
 Required Parameters:
@@ -26,7 +26,5 @@ Examples: "IHsgIm5hbWUiOiJQZXRlIiwgImFnZSI6MzAsICJjYXIiOm51bGwgfQ=="
     "right": "IHsgIm5hbWUiOiJKb2huIiwgImFnZSI6MzAsICJjYXIiOm51bGwgfQ==",<br />
     "equal": false,<br />
     "sameSize": true,<br />
-    "diffInsights": [<br />
-        "Difference detected, starting at offset 16 with length of 5."<br />
-    ]<br />
+    "diffInsights": ["Difference detected, starting at offset 16 with length of 5."]<br />
 }
