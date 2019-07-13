@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PASW.Domain\PASW.Domain.csproj" />
+    <ProjectReference Include="..\PASW.Util\PASW.Util.csproj" />
+  </ItemGroup>
+
+</Project>
