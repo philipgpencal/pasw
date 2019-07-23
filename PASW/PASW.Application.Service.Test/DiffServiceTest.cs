@@ -7,7 +7,6 @@ using Xunit;
 using FluentAssertions;
 using PASW.Application.Service.Test.Factory;
 using PASW.Util.Exceptions;
-using PASW.Util.Extensions;
 using PASW.Domain.Entity;
 
 namespace PASW.Application.Service.Test
@@ -76,7 +75,7 @@ namespace PASW.Application.Service.Test
                 .ReturnsAsync(ComparisonRequestFactory.GetSingleSideNull(1, Side.Right, "someValue"));
 
             Func<Task> compare = async () => await target.Diff(1);
-            compare.ShouldThrow<PASWException>(ExceptionType.InsuficientDataForComparison.Description());
+            compare.ShouldThrow<DataComparisonNotEnoughException>();
         }
 
         [Fact]
@@ -86,7 +85,7 @@ namespace PASW.Application.Service.Test
                 .ReturnsAsync(ComparisonRequestFactory.GetSingleSideNull(1, Side.Left, "someValue"));
 
             Func<Task> compare = async () => await target.Diff(1);
-            compare.ShouldThrow<PASWException>(ExceptionType.InsuficientDataForComparison.Description());
+            compare.ShouldThrow<DataComparisonNotEnoughException>();
         }
 
         [Fact]
@@ -96,7 +95,7 @@ namespace PASW.Application.Service.Test
                 .ReturnsAsync(ComparisonRequestFactory.GetSingleSideNull(1, Side.Left, "someValue"));
 
             Func<Task> compare = async () => await target.Diff(1);
-            compare.ShouldThrow<PASWException>(ExceptionType.InsuficientDataForComparison.Description());
+            compare.ShouldThrow<DataComparisonNotEnoughException>();
         }
 
         [Fact]

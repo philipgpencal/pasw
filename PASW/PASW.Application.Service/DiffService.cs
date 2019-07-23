@@ -61,12 +61,12 @@ namespace PASW.Application.Service
             var comparisonRequest = await diffRepository.GetById(id);
             if (comparisonRequest == null)
             {
-                throw new PASWException(ExceptionType.ComparisonRequestNotFound);
+                throw new ComparisonNotFoundException();
             }
 
             if (comparisonRequest.Left == null || comparisonRequest.Right == null)
             {
-                throw new PASWException(ExceptionType.InsuficientDataForComparison);
+                throw new DataComparisonNotEnoughException();
             }
 
             return Diff(comparisonRequest);
@@ -85,6 +85,11 @@ namespace PASW.Application.Service
             await diffRepository.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Compare position and size from a comparison request.
+        /// </summary>
+        /// <param name="comparisonRequest">hashs object</param>
+        /// <returns>Return objetct with compasion results</returns>
         private DiffResultDTO Diff(ComparisonRequest comparisonRequest)
         {
             var result = new DiffResultDTO
@@ -94,11 +99,13 @@ namespace PASW.Application.Service
                 Left = comparisonRequest.Left
             };
 
+            // Comparing positions
             if (comparisonRequest.Left.Equals(comparisonRequest.Right))
             {
                 result.Equal = true;
             }
 
+            // Comparing sizes
             result.SameSize = comparisonRequest.Right.Length == comparisonRequest.Left.Length;
 
             if (!result.SameSize)
@@ -106,11 +113,18 @@ namespace PASW.Application.Service
                 return result;
             }
 
+            // Collecting Differences between both hashs
             result.DiffInsights = GetDiffInsights(result.Left, result.Right);
 
             return result;
         }
 
+        /// <summary>
+        /// Get different insights comparing each char between two string hashs.
+        /// </summary>
+        /// <param name="left">left side hash</param>
+        /// <param name="right">right side hash</param>
+        /// <returns>Return a list of differences</returns>
         private List<string> GetDiffInsights(string left, string right)
         {
             var result = new List<string>();
@@ -118,20 +132,29 @@ namespace PASW.Application.Service
             var diffLength = 0;
             var diffOffset = 0;
 
+            // Run over each character to find the diferences
             while (offset < left.Length)
             {
                 if (left[offset] != right[offset])
                 {
-                    if (diffOffset == 0) diffOffset = offset;
+                    // If chars aren't equal, stay with the first difference position
+                    if (diffOffset == 0)
+                    {
+                        diffOffset = offset;
+                    }
+
+                    // Include difference found on counter.
                     diffLength++;
                 }
                 else
                 {
+                    // Create an insight based on previous differences found
                     if (diffLength > 0)
                     {
                         result.Add($"Difference detected, starting at offset {diffOffset + 1} with length of {diffLength}.");
                     }
-                        
+
+                    // Reset variables to move to the next search
                     diffLength = 0;
                     diffOffset = 0;
                 }
@@ -139,6 +162,7 @@ namespace PASW.Application.Service
                 offset++;
             }
 
+            // Check if the last char is different as well.
             if (diffLength > 0)
             {
                 result.Add($"Difference detected, starting at offset {diffOffset + 1} with length of {diffLength}.");
